@@ -2,6 +2,7 @@ import React from "react";
 import { Sheet, SheetContent, SheetFooter } from "@/components/sheet";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { MenuToggle } from "@/components/menu-toggle";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export function SimpleHeader() {
   const [open, setOpen] = React.useState(false);
@@ -34,6 +35,7 @@ export function SimpleHeader() {
           ))}
           <Button variant="outline">Features</Button>
           <Button className="hover:cursor-pointer">Login with Discord</Button>
+          <ThemeToggle />
         </div>
         <Sheet open={open} onOpenChange={setOpen}>
           <Button size="icon" variant="outline" className="lg:hidden">
@@ -63,6 +65,7 @@ export function SimpleHeader() {
               ))}
             </div>
             <SheetFooter>
+              <ThemeToggle />
               <Button variant="outline">Features</Button>
               <Button>Login with Discord</Button>
             </SheetFooter>

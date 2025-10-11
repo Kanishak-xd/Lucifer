@@ -9,7 +9,7 @@ import SupportPage from "./pages/SupportPage.tsx";
 function App() {
   return (
     <Router>
-      <div className="min-h-screen">
+      <div className="min-h-screen dark:bg-black">
         <SimpleHeader />
         <Routes>
           <Route path="/" element={<Navigate to="/home" replace />} />
