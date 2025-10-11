@@ -11,12 +11,12 @@ export function SimpleHeader() {
     {
       label: "About",
       href: "#",
-    },
+    }
   ];
 
   return (
-    <header className="bg-background/95 supports-[backdrop-filter]:bg-background/80 sticky top-1/4 z-50 w-full border-b backdrop-blur-lg">
-      <nav className="mx-auto flex h-14 w-full max-w-4xl items-center justify-between px-4">
+    <header className="bg-background/95 supports-[backdrop-filter]:bg-background/80 sticky top-0 z-50 w-full border-b backdrop-blur-lg">
+      <nav className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between px-4">
         <div className="flex items-center gap-2">
           <img
             src="https://res.cloudinary.com/dykzzd9sy/image/upload/v1760186291/lucifer_face_tdgrnv.png"
