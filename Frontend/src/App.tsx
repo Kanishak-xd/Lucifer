@@ -5,6 +5,7 @@ import HomePage from "./pages/HomePage.tsx";
 import AboutPage from "./pages/AboutPage.tsx";
 import DashboardPage from "./pages/DashboardPage.tsx";
 import SupportPage from "./pages/SupportPage.tsx";
+import Footer from "./components/Footer.tsx";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/support" element={<SupportPage />} />
         </Routes>
+        <Footer />
       </div>
     </Router>
   );
