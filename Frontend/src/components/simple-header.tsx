@@ -1,5 +1,4 @@
 import React from "react";
-import { Grid2x2PlusIcon } from "lucide-react";
 import { Sheet, SheetContent, SheetFooter } from "@/components/sheet";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { MenuToggle } from "@/components/menu-toggle";
@@ -34,7 +33,7 @@ export function SimpleHeader() {
             </a>
           ))}
           <Button variant="outline">Features</Button>
-          <Button>Login with Discord</Button>
+          <Button className="hover:cursor-pointer">Login with Discord</Button>
         </div>
         <Sheet open={open} onOpenChange={setOpen}>
           <Button size="icon" variant="outline" className="lg:hidden">
