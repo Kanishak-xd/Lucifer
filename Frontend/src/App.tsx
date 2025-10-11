@@ -1,9 +1,10 @@
 import "./App.css";
+import { SimpleHeader } from "./components/simple-header";
 
 function App() {
   return (
     <>
-      <p className="text-3xl text-red-300">Hell Yeah</p>
+      <SimpleHeader />
     </>
   );
 }
