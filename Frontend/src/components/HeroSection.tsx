@@ -1,11 +1,11 @@
 export default function HeroSection() {
   return (
-    <section className="w-full">
+    <section className="">
       <div className="container mx-auto flex flex-col items-center px-4 py-16 text-center md:py-32 md:px-10 lg:px-32 xl:max-w-4xl">
         <h1 className="font-bold leading-none text-4xl sm:text-5xl md:text-5xl xl:text-6xl dark:text-white">
           Lucifer – Your Campus <br/>Companion
         </h1>
-        <p className="mt-8 mb-12 text-xl xl:text-2xl font-normal text-neutral-500 mx-5 sm:mx-20 md:mx-0 px-0 sm:px-0 md:px-37 xl:px-17">
+        <p className="mt-8 mb-12 text-lg sm:text-xl xl:text-2xl font-normal text-neutral-500 max-w-2xl px-4">
           Meals, classes, and reminders made easy, Lucifer keeps campus life simple.
         </p>
         <div className="flex flex-wrap justify-center">
