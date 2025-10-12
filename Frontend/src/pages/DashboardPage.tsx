@@ -1,5 +1,36 @@
+import { useState } from 'react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
+import { useAuth } from '@/context/AuthContext';
+
 export default function DashboardPage() {
+  const { user } = useAuth();
+  const [selectedServer, setSelectedServer] = useState("");
+
   return (
-    <></>
+    <div className="flex justify-center">
+      <div className="w-6xl h-screen">
+        <h1 className="text-white text-5xl font-bold pt-16">Menu Automation</h1>
+        
+        <div className="mt-8">
+          <label className="text-white block mb-3">Select a Server:</label>
+          {user?.guilds && user.guilds.length > 0 ? (
+            <Select value={selectedServer} onValueChange={setSelectedServer}>
+              <SelectTrigger className="w-[200px]">
+                <SelectValue placeholder="Select a server" />
+              </SelectTrigger>
+              <SelectContent>
+                {user.guilds.map((guild) => (
+                  <SelectItem key={guild.id} value={guild.id}>
+                    {guild.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          ) : (
+            <p className="text-gray-400">No servers found</p>
+          )}
+        </div>
+      </div>
+    </div>
   )
 }

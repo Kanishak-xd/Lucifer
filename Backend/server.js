@@ -1,7 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-
 import cors from "cors";
 import axios from "axios";
 import jwt from "jsonwebtoken";
@@ -68,12 +67,44 @@ app.get("/auth/discord/callback", async (req, res) => {
 
     const user = userResponse.data;
 
-    // Create JWT token for frontend
+    // Fetch user's guilds (servers)
+    const guildsResponse = await axios.get("https://discord.com/api/users/@me/guilds", {
+      headers: { Authorization: `Bearer ${access_token}` },
+    });
+
+    let guilds = guildsResponse.data;
+
+    // Filter guilds where bot is present by checking each guild
+    const botGuilds = [];
+    for (const guild of guilds) {
+      try {
+        // Try to fetch the bot member from the guild
+        const botMemberResponse = await axios.get(
+          `https://discord.com/api/guilds/${guild.id}/members/${process.env.DISCORD_CLIENT_ID}`,
+          {
+            headers: { Authorization: `Bot ${process.env.DISCORD_BOT_TOKEN}` },
+          }
+        );
+        
+        // If request succeeds, bot is in this guild
+        if (botMemberResponse.status === 200) {
+          botGuilds.push(guild);
+        }
+      } catch (err) {
+        // Bot not in this guild, skip it
+        continue;
+      }
+    }
+    
+    const filteredGuilds = botGuilds;
+
+    // Create JWT token for frontend with user info and guilds
     const token = jwt.sign(
       {
         id: user.id,
         username: user.username,
         avatar: user.avatar,
+        guilds: filteredGuilds, // Only guilds where bot is present
       },
       process.env.JWT_SECRET,
       { expiresIn: "7d" }

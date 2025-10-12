@@ -4,6 +4,13 @@ interface User {
   id: string;
   username: string;
   avatar: string;
+  guilds?: Array<{
+    id: string;
+    name: string;
+    icon: string;
+    owner: boolean;
+    permissions: string;
+  }>;
 }
 
 interface AuthContextType {
