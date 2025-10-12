@@ -1,6 +1,7 @@
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext.tsx";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 
 import { SimpleHeader } from "./components/simple-header";
 import HomePage from "./pages/HomePage.tsx";
@@ -31,7 +32,11 @@ function App() {
             <Route path="/" element={<Navigate to="/home" replace />} />
             <Route path="/home" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />
-            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/dashboard" element={
+              <ProtectedRoute>
+                <DashboardPage />
+              </ProtectedRoute>
+            }/>
             <Route path="/support" element={<SupportPage />} />
             <Route path="/auth/success" element={<AuthSuccessPage />} />
           </Routes>
