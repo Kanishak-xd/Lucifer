@@ -14,6 +14,9 @@ export default function DashboardPage() {
   const [isDragging, setIsDragging] = useState(false);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+
+  // Create a boolean to track if the selector should be disabled
+  const isFileSelectorDisabled = !selectedServer;
   
   const { previewUrl, fileName, fileInputRef, handleThumbnailClick, handleFileChange, handleRemove, } = useImageUpload({
     onUpload: (url) => {
@@ -120,7 +123,13 @@ export default function DashboardPage() {
         </div>
         
         <div className="mt-8">
-          <div className="w-full max-w-md space-y-6 rounded-xl border border-border bg-card p-6 shadow-sm">
+          {/* Apply conditional classes for the disabled state */}
+          <div className={cn(
+            "w-full max-w-md space-y-6 rounded-xl border border-border bg-card p-6 shadow-sm transition-opacity",
+            {
+              "opacity-50 cursor-not-allowed pointer-events-none": isFileSelectorDisabled,
+            }
+          )}>
             <div className="space-y-2">
               <h3 className="text-lg font-medium text-white">Excel File Upload</h3>
               <p className="text-sm text-muted-foreground">
@@ -184,7 +193,8 @@ export default function DashboardPage() {
           
           {/* Save Button */}
           <div className="mt-6 flex">
-            <Button onClick={handleSaveMenu} disabled={!uploadedFile || isProcessing}
+            {/* Also disable the save button if no server is selected */}
+            <Button onClick={handleSaveMenu} disabled={isFileSelectorDisabled || !uploadedFile || isProcessing}
               className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg flex items-center gap-2"
             >
               <Save className="h-4 w-4" />
