@@ -100,10 +100,10 @@ export default function DashboardPage() {
   return (
     <div className="flex justify-center">
       <div className="w-6xl h-screen">
-        <h1 className="text-white text-5xl font-bold pt-16">Menu Automation</h1>
+        <h1 className="dark:text-white text-5xl font-bold pt-16">Menu Automation</h1>
         
         <div className="mt-8">
-          <label className="text-white block mb-3">Select a Server:</label>
+          <label className="dark:text-white block mb-3">Select a Server:</label>
           {user?.guilds && user.guilds.length > 0 ? (
             <Select value={selectedServer} onValueChange={setSelectedServer}>
               <SelectTrigger className="w-[200px]">
@@ -131,7 +131,7 @@ export default function DashboardPage() {
             }
           )}>
             <div className="space-y-2">
-              <h3 className="text-lg font-medium text-white">Excel File Upload</h3>
+              <h3 className="text-lg font-medium dark:text-white">Excel File Upload</h3>
               <p className="text-sm text-muted-foreground">
                 Supported formats: .xlsx
               </p>
@@ -153,7 +153,7 @@ export default function DashboardPage() {
                   <FileSpreadsheet className="h-6 w-6 text-muted-foreground" />
                 </div>
                 <div className="text-center">
-                  <p className="text-sm font-medium text-white">Click to select</p>
+                  <p className="text-sm font-medium dark:text-white">Click to select</p>
                   <p className="text-xs text-muted-foreground">
                     or drag and drop file here
                   </p>
