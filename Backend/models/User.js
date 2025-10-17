@@ -13,8 +13,15 @@ const UserSchema = new mongoose.Schema({
   avatar: {
     type: String,
   },
-  // You can add more fields here as your application grows
-  // For example, storing guilds, roles, or other app-specific data
+  // Array of uploads
+  uploads: [
+    {
+      serverId: { type: String, required: true },
+      serverName: { type: String, required: true },
+      fileUrl: { type: String, required: true },
+      uploadedAt: { type: Date, default: Date.now },
+    },
+  ],
 });
 
 const User = mongoose.model("User", UserSchema);

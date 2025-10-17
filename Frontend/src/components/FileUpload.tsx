@@ -1,21 +1,28 @@
-// src/components/FileUpload.tsx
-
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { FileSpreadsheet, X, Upload, Trash2, Save } from "lucide-react";
+import { FileSpreadsheet, X, Upload, Trash2, CloudUpload } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { parseMenu } from '@/utils/menuParser'; 
+import { useAuth } from '@/context/AuthContext';
+import { parseMenu } from '@/utils/menuParser';
 
 interface FileUploadProps {
   isDisabled: boolean;
+  selectedServerId: string;
+  selectedServerName: string;
 }
 
-export default function FileUpload({ isDisabled }: FileUploadProps) {
+export default function FileUpload({ isDisabled, selectedServerId, selectedServerName }: FileUploadProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [existingUpload, setExistingUpload] = useState<{ _id: string; serverId: string; serverName: string; fileUrl: string } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  useAuth();
+
+  const API_BASE = import.meta.env.VITE_API_BASE;
+  const CLOUDINARY_UPLOAD_URL = import.meta.env.VITE_CLOUDINARY_UPLOAD_URL;
+  const CLOUDINARY_UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -66,34 +73,114 @@ export default function FileUpload({ isDisabled }: FileUploadProps) {
     [],
   );
 
-  const handleSaveMenu = async () => {
+  const fetchExistingUploads = useCallback(async () => {
+    try {
+      const token = localStorage.getItem('discord_token');
+      if (!token) return;
+      const res = await fetch(`${API_BASE}/api/uploads/me`, {
+        headers: { Authorization: `Bearer ${token}` },
+        credentials: 'include',
+      });
+      if (!res.ok) return;
+      const data = await res.json();
+      const first = Array.isArray(data.uploads) && data.uploads.length > 0 ? data.uploads[0] : null;
+      setExistingUpload(first || null);
+    } catch (e) {
+      console.error('Failed to fetch uploads', e);
+    }
+  }, [API_BASE]);
+
+  useEffect(() => {
+    fetchExistingUploads();
+  }, [fetchExistingUploads]);
+
+  const handleUpload = async () => {
     if (!uploadedFile) {
-      alert("Please upload an Excel file first.");
+      alert("Please select an Excel file first.");
+      return;
+    }
+    if (!selectedServerId || !selectedServerName) {
+      alert("Please select a server first.");
+      return;
+    }
+    if (existingUpload) {
+      alert("You already have an upload. Remove it before uploading a new one.");
+      return;
+    }
+    if (!CLOUDINARY_UPLOAD_PRESET) {
+      alert("Missing Cloudinary upload preset configuration.");
       return;
     }
 
     setIsProcessing(true);
     try {
-      const menu = await parseMenu(uploadedFile);
-      
-      const jsonString = JSON.stringify(menu, null, 2);
-      const blob = new Blob([jsonString], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'menu.json';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-      
-      console.log("Menu saved successfully!");
+      // 1) Convert XLSX to JSON using menuParser
+      const parsed = await parseMenu(uploadedFile);
+      const jsonString = JSON.stringify(parsed, null, 2);
+      const jsonBlob = new Blob([jsonString], { type: 'application/json' });
+
+      // 2) Upload JSON to Cloudinary as a RAW asset
+      const formData = new FormData();
+      formData.append('file', jsonBlob, 'menu.json');
+      formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+      const cloudinaryResp = await fetch(CLOUDINARY_UPLOAD_URL, {
+        method: 'POST',
+        body: formData,
+      });
+      if (!cloudinaryResp.ok) throw new Error('Cloudinary upload failed');
+      const cloudinaryData = await cloudinaryResp.json();
+      const fileUrl = cloudinaryData.secure_url || cloudinaryData.url;
+      if (!fileUrl) throw new Error('No file URL returned by Cloudinary');
+
+      // 3) Save mapping to backend
+      const token = localStorage.getItem('discord_token');
+      const saveResp = await fetch(`${API_BASE}/api/uploads`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        credentials: 'include',
+        body: JSON.stringify({ serverId: selectedServerId, serverName: selectedServerName, fileUrl }),
+      });
+      if (!saveResp.ok) {
+        const errText = await saveResp.text();
+        throw new Error(errText || 'Failed to save upload');
+      }
+      const saved = await saveResp.json();
+      const first = Array.isArray(saved.uploads) && saved.uploads.length > 0 ? saved.uploads[0] : null;
+      setExistingUpload(first || null);
+      setUploadedFile(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      alert('File uploaded successfully.');
     } catch (error) {
-      console.error("Error processing menu:", error);
-      alert("Error processing the Excel file. Please check the format.");
+      console.error('Upload failed', error);
+      alert('Upload failed. Please try again.');
     } finally {
       setIsProcessing(false);
+    }
+  };
+
+  const handleRemoveExisting = async () => {
+    if (!existingUpload) return;
+    try {
+      const token = localStorage.getItem('discord_token');
+      const res = await fetch(`${API_BASE}/api/uploads/${existingUpload._id}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
+        credentials: 'include',
+      });
+      if (!res.ok) {
+        const t = await res.text();
+        throw new Error(t || 'Failed to remove');
+      }
+      const data = await res.json();
+      const first = Array.isArray(data.uploads) && data.uploads.length > 0 ? data.uploads[0] : null;
+      setExistingUpload(first || null);
+      alert('Removed existing upload.');
+    } catch (e) {
+      console.error('Failed to remove upload', e);
+      alert('Failed to remove upload.');
     }
   };
   
@@ -176,15 +263,23 @@ export default function FileUpload({ isDisabled }: FileUploadProps) {
         )}
       </div>
       
-      <div className="mt-6 flex">
+      <div className="mt-6 flex gap-3 items-center">
         <Button 
-          onClick={handleSaveMenu} 
-          disabled={isDisabled || !uploadedFile || isProcessing}
+          onClick={handleUpload} 
+          disabled={isDisabled || !uploadedFile || isProcessing || !!existingUpload}
           className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg flex items-center gap-2"
         >
-          <Save className="h-4 w-4" />
-          {isProcessing ? "Processing..." : "Save as JSON"}
+          <CloudUpload className="h-4 w-4" />
+          {isProcessing ? "Uploading..." : "Upload File"}
         </Button>
+        {existingUpload && (
+          <div className="text-sm text-muted-foreground flex items-center gap-2">
+            <a href={existingUpload.fileUrl} target="_blank" rel="noreferrer" className="px-6 py-[9.5px] mr-1 font-medium bg-blue-300 text-white dark:bg-neutral-200 dark:text-black rounded-md">View current upload</a>
+            <Button size="sm" className='dark:text-black text-white' variant="destructive" onClick={handleRemoveExisting}>
+              <Trash2 className="h-4 w-4 mr-1" /> Remove
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );

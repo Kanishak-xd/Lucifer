@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
 import discordAuthRoutes from "./routes/discordAuth.js";
+import uploadsRoutes from "./routes/uploads.js";
 
 // Load environment variables
 dotenv.config();
@@ -28,9 +29,10 @@ mongoose
 app.get("/", (req, res) => {
   res.send("Backend running");
 });
-
 // Use the Discord authentication routes
 app.use("/auth/discord", discordAuthRoutes);
+// Uploads API
+app.use("/api/uploads", uploadsRoutes);
 
 
 // Server start

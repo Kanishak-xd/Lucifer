@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
 import { useAuth } from '@/context/AuthContext';
 import FileUpload from '@/components/FileUpload';
@@ -6,6 +6,7 @@ import FileUpload from '@/components/FileUpload';
 export default function DashboardPage() {
   const { user } = useAuth();
   const [selectedServer, setSelectedServer] = useState("");
+  const selectedGuild = useMemo(() => user?.guilds?.find(g => g.id === selectedServer), [user, selectedServer]);
 
   // A server must be selected to enable the file upload
   const isFileSelectorDisabled = !selectedServer;
@@ -36,7 +37,11 @@ export default function DashboardPage() {
         </div>
         
         {/* FileUpload component */}
-        <FileUpload isDisabled={isFileSelectorDisabled} />
+        <FileUpload 
+          isDisabled={isFileSelectorDisabled} 
+          selectedServerId={selectedGuild?.id || ""}
+          selectedServerName={selectedGuild?.name || ""}
+        />
       </div>
     </div>
   )
