@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
 import { useAuth } from '@/context/AuthContext';
 import FileUpload from '@/components/FileUpload';
+import { DateInput, TimeField } from "@/components/ui/timefield"
 
 export default function DashboardPage() {
   const { user } = useAuth();
@@ -13,7 +14,7 @@ export default function DashboardPage() {
   
   return (
     <div className="flex justify-center">
-      <div className="w-6xl h-screen">
+      <div className="w-6xl h-full">
         <h1 className="dark:text-white text-5xl font-bold pt-16">Menu Automation</h1>
         
         <div className="mt-8">
@@ -42,6 +43,29 @@ export default function DashboardPage() {
           selectedServerId={selectedGuild?.id || ""}
           selectedServerName={selectedGuild?.name || ""}
         />
+
+        {/* Time Input component */}
+        <div className={`space-y-1 mt-8 ${isFileSelectorDisabled ? 'opacity-50 pointer-events-none' : ''}`}>
+          <TimeField className="space-y-1">
+            <label className="dark:text-white block mb-3">Breakfast:</label>
+            <DateInput className={"w-30"} />
+          </TimeField>
+
+          <TimeField className="space-y-1 mt-8">
+            <label className="dark:text-white block mb-3">Lunch:</label>
+            <DateInput className={"w-30"} />
+          </TimeField>
+
+          <TimeField className="space-y-1 mt-8">
+            <label className="dark:text-white block mb-3">Snacks:</label>
+            <DateInput className={"w-30"} />
+          </TimeField>
+
+          <TimeField className="space-y-1 mt-8">
+            <label className="dark:text-white block mb-3">Dinner:</label>
+            <DateInput className={"w-30"} />
+          </TimeField>
+        </div>
       </div>
     </div>
   )
