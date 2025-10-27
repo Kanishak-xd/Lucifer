@@ -22,6 +22,19 @@ const UserSchema = new mongoose.Schema({
       uploadedAt: { type: Date, default: Date.now },
     },
   ],
+  // Meal schedules for each server
+  mealSchedules: [
+    {
+      serverId: { type: String, required: true },
+      roleId: { type: String },
+      roleName: { type: String },
+      breakfast: { type: String },
+      lunch: { type: String },
+      snacks: { type: String },
+      dinner: { type: String },
+      updatedAt: { type: Date, default: Date.now },
+    },
+  ],
 });
 
 const User = mongoose.model("User", UserSchema);

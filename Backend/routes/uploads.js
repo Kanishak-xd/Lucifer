@@ -84,6 +84,72 @@ router.delete("/:uploadId", authMiddleware, async (req, res) => {
   }
 });
 
+// Get meal schedule for a server
+router.get("/meal-schedules/:serverId", authMiddleware, async (req, res) => {
+  try {
+    const { id: discordId } = req.user;
+    const { serverId } = req.params;
+
+    const user = await User.findOne({ discordId });
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    const mealSchedule = user.mealSchedules.find(s => s.serverId === serverId);
+    
+    if (mealSchedule) {
+      return res.json(mealSchedule);
+    } else {
+      return res.json(null);
+    }
+  } catch (err) {
+    return res.status(500).json({ message: "Failed to fetch meal schedule" });
+  }
+});
+
+// Save meal schedule for a server
+router.post("/meal-schedules", authMiddleware, async (req, res) => {
+  try {
+    const { id: discordId, username, avatar } = req.user;
+    const { serverId, roleId, roleName, breakfast, lunch, snacks, dinner } = req.body;
+
+    if (!serverId) {
+      return res.status(400).json({ message: "serverId required" });
+    }
+
+    const user = await User.findOneAndUpdate(
+      { discordId },
+      { $set: { username, avatar } },
+      { new: true, upsert: true }
+    );
+
+    // Check if meal schedule already exists for this server
+    const existingScheduleIndex = user.mealSchedules.findIndex(s => s.serverId === serverId);
+    
+    const newSchedule = {
+      serverId,
+      roleId: roleId || null,
+      roleName: roleName || null,
+      breakfast: breakfast || null,
+      lunch: lunch || null,
+      snacks: snacks || null,
+      dinner: dinner || null,
+      updatedAt: new Date(),
+    };
+
+    if (existingScheduleIndex !== -1) {
+      // Update existing schedule
+      user.mealSchedules[existingScheduleIndex] = newSchedule;
+    } else {
+      // Add new schedule
+      user.mealSchedules.push(newSchedule);
+    }
+
+    await user.save();
+    return res.status(200).json({ message: "Meal schedule saved", mealSchedule: newSchedule });
+  } catch (err) {
+    return res.status(500).json({ message: "Failed to save meal schedule" });
+  }
+});
+
 export default router;
 
 

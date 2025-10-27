@@ -98,4 +98,36 @@ router.get("/callback", async (req, res) => {
   }
 });
 
+// Get roles for a specific guild
+// GET /auth/discord/roles/:guildId
+router.get("/roles/:guildId", async (req, res) => {
+  try {
+    const { guildId } = req.params;
+    
+    // Fetch roles from Discord API using bot token
+    const rolesResponse = await axios.get(
+      `https://discord.com/api/guilds/${guildId}/roles`,
+      {
+        headers: { Authorization: `Bot ${process.env.DISCORD_BOT_TOKEN}` },
+      }
+    );
+
+    const roles = rolesResponse.data;
+    
+    // Filter out @everyone role and return name and id
+    const filteredRoles = roles
+      .filter(role => role.name !== '@everyone')
+      .map(role => ({
+        id: role.id,
+        name: role.name,
+        color: role.color,
+      }));
+
+    res.json({ roles: filteredRoles });
+  } catch (err) {
+    console.error("Error fetching roles:", err.response?.data || err.message);
+    res.status(500).json({ message: "Failed to fetch roles" });
+  }
+});
+
 export default router;
