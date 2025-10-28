@@ -8,9 +8,9 @@ export default function FeaturesSection() {
                     <h3 className="text-2xl sm:text-3xl font-bold">Mess Menu Notification</h3>
                     <p className="my-4 sm:my-6 text-neutral-500 dark:text-white text-xl">Lucifer auto-sends the daily mess menu before meals</p>
                     <div className="flex justify-center sm:justify-center md:justify-start xl:justify-start">
-                        <button className="px-10 py-3 m-0 text-lg font-semibold rounded-xl bg-black text-white dark:bg-white dark:text-black hover:bg-neutral-900 dark:hover:bg-neutral-200 hover:cursor-pointer">
+                        <a href="https://discord.com/oauth2/authorize?client_id=1338873280941129789&permissions=257024&integration_type=0&scope=bot+applications.commands" className="px-10 py-3 m-0 text-lg font-semibold rounded-xl bg-black text-white dark:bg-white dark:text-black hover:bg-neutral-900 dark:hover:bg-neutral-200 hover:cursor-pointer">
                             Add to Discord
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -20,9 +20,9 @@ export default function FeaturesSection() {
                     <h3 className="text-2xl sm:text-3xl font-bold">Smart Reminders</h3>
                     <p className="my-4 sm:my-6 text-neutral-500 dark:text-white text-xl">Reminders for daily classes, laundry, and TMP menu</p>
                     <div className="flex justify-center sm:justify-center md:justify-start xl:justify-start">
-                        <button className="px-10 py-3 m-0 text-lg font-semibold rounded-xl bg-black text-white dark:bg-white dark:text-black hover:bg-neutral-900 dark:hover:bg-neutral-200 hover:cursor-pointer">
+                        <a href="https://discord.com/oauth2/authorize?client_id=1338873280941129789&permissions=257024&integration_type=0&scope=bot+applications.commands" className="px-10 py-3 m-0 text-lg font-semibold rounded-xl bg-black text-white dark:bg-white dark:text-black hover:bg-neutral-900 dark:hover:bg-neutral-200 hover:cursor-pointer">
                             Add to Discord
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -32,9 +32,9 @@ export default function FeaturesSection() {
                     <h3 className="text-2xl sm:text-3xl font-bold">Lyrics on Demand</h3>
                     <p className="my-4 sm:my-6 text-neutral-500 dark:text-white text-xl">Search for your favourite song lyrics right inside Discord</p>
                     <div className="flex justify-center sm:justify-center md:justify-start xl:justify-start">
-                        <button className="px-10 py-3 m-0 text-lg font-semibold rounded-xl bg-black text-white dark:bg-white dark:text-black hover:bg-neutral-900 dark:hover:bg-neutral-200 hover:cursor-pointer">
+                        <a href="https://discord.com/oauth2/authorize?client_id=1338873280941129789&permissions=257024&integration_type=0&scope=bot+applications.commands" className="px-10 py-3 m-0 text-lg font-semibold rounded-xl bg-black text-white dark:bg-white dark:text-black hover:bg-neutral-900 dark:hover:bg-neutral-200 hover:cursor-pointer">
                             Add to Discord
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -44,9 +44,9 @@ export default function FeaturesSection() {
                     <h3 className="text-2xl sm:text-3xl font-bold">Slash Command Support</h3>
                     <p className="my-4 sm:my-6 text-neutral-500 dark:text-white text-xl">All features run with clean, modern slash commands for a smooth Discord experience</p>
                     <div className="flex justify-center sm:justify-center md:justify-start xl:justify-start">
-                        <button className="px-10 py-3 m-0 text-lg font-semibold rounded-xl bg-black text-white dark:bg-white dark:text-black hover:bg-neutral-900 dark:hover:bg-neutral-200 hover:cursor-pointer">
+                        <a href="https://discord.com/oauth2/authorize?client_id=1338873280941129789&permissions=257024&integration_type=0&scope=bot+applications.commands" className="px-10 py-3 m-0 text-lg font-semibold rounded-xl bg-black text-white dark:bg-white dark:text-black hover:bg-neutral-900 dark:hover:bg-neutral-200 hover:cursor-pointer">
                             Add to Discord
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>
