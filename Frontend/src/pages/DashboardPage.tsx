@@ -83,7 +83,8 @@ export default function DashboardPage() {
           return;
         }
 
-        const response = await fetch('http://localhost:5000/api/uploads/me', {
+        const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:5000';
+        const response = await fetch(`${API_BASE}/api/uploads/me`, {
           headers: { Authorization: `Bearer ${token}` },
           credentials: 'include',
         });
@@ -114,7 +115,8 @@ export default function DashboardPage() {
       }
 
       try {
-        const response = await fetch(`http://localhost:5000/auth/discord/roles/${selectedServer}`);
+        const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:5000';
+        const response = await fetch(`${API_BASE}/auth/discord/roles/${selectedServer}`);
         if (response.ok) {
           const data = await response.json();
           setRoles(data.roles || []);
@@ -141,7 +143,8 @@ export default function DashboardPage() {
       }
 
       try {
-        const response = await fetch(`http://localhost:5000/auth/discord/channels/${selectedServer}`);
+        const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:5000';
+        const response = await fetch(`${API_BASE}/auth/discord/channels/${selectedServer}`);
         if (response.ok) {
           const data = await response.json();
           setChannels(data.channels || []);
@@ -174,8 +177,9 @@ export default function DashboardPage() {
         const token = localStorage.getItem('discord_token');
         if (!token) return;
 
+        const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:5000';
         const response = await fetch(
-          `http://localhost:5000/api/uploads/meal-schedules/${selectedServer}`,
+          `${API_BASE}/api/uploads/meal-schedules/${selectedServer}`,
           {
             headers: { Authorization: `Bearer ${token}` },
             credentials: 'include',
@@ -251,7 +255,8 @@ export default function DashboardPage() {
       const selectedRoleData = roles.find(r => r.id === selectedRole);
       const roleName = selectedRoleData?.name || "";
 
-      const response = await fetch('http://localhost:5000/api/uploads/meal-schedules', {
+      const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:5000';
+      const response = await fetch(`${API_BASE}/api/uploads/meal-schedules`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

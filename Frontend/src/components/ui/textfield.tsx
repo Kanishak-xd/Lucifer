@@ -1,4 +1,3 @@
-import * as React from "react"
 import {
   Input as AriaInput,
   type InputProps as AriaInputProps,
