@@ -130,4 +130,31 @@ router.get("/roles/:guildId", async (req, res) => {
   }
 });
 
+// Get text channels for a specific guild
+// GET /auth/discord/channels/:guildId
+router.get("/channels/:guildId", async (req, res) => {
+  try {
+    const { guildId } = req.params;
+
+    const channelsResponse = await axios.get(
+      `https://discord.com/api/guilds/${guildId}/channels`,
+      {
+        headers: { Authorization: `Bot ${process.env.DISCORD_BOT_TOKEN}` },
+      }
+    );
+
+    const channels = channelsResponse.data || [];
+
+    // Discord channel type 0 = GUILD_TEXT (standard text channels)
+    const textChannels = channels
+      .filter((ch) => ch?.type === 0)
+      .map((ch) => ({ id: ch.id, name: ch.name }));
+
+    res.json({ channels: textChannels });
+  } catch (err) {
+    console.error("Error fetching channels:", err.response?.data || err.message);
+    res.status(500).json({ message: "Failed to fetch channels" });
+  }
+});
+
 export default router;

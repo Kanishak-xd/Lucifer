@@ -10,9 +10,12 @@ interface FileUploadProps {
   isDisabled: boolean;
   selectedServerId: string;
   selectedServerName: string;
+  selectedChannelId?: string;
+  selectedChannelName?: string;
+  onUploadSuccess?: (upload: { _id: string; serverId: string; serverName: string; fileUrl: string } | null) => void;
 }
 
-export default function FileUpload({ isDisabled, selectedServerId, selectedServerName }: FileUploadProps) {
+export default function FileUpload({ isDisabled, selectedServerId, selectedServerName, selectedChannelId, selectedChannelName, onUploadSuccess }: FileUploadProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -141,7 +144,7 @@ export default function FileUpload({ isDisabled, selectedServerId, selectedServe
           Authorization: `Bearer ${token}`,
         },
         credentials: 'include',
-        body: JSON.stringify({ serverId: selectedServerId, serverName: selectedServerName, fileUrl }),
+        body: JSON.stringify({ serverId: selectedServerId, serverName: selectedServerName, channelId: selectedChannelId, channelName: selectedChannelName, fileUrl }),
       });
       if (!saveResp.ok) {
         const errText = await saveResp.text();
@@ -150,6 +153,7 @@ export default function FileUpload({ isDisabled, selectedServerId, selectedServe
       const saved = await saveResp.json();
       const first = Array.isArray(saved.uploads) && saved.uploads.length > 0 ? saved.uploads[0] : null;
       setExistingUpload(first || null);
+      if (onUploadSuccess) onUploadSuccess(first);
       setUploadedFile(null);
       if (fileInputRef.current) fileInputRef.current.value = "";
       alert('File uploaded successfully.');

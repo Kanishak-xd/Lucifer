@@ -23,9 +23,16 @@ interface MealSchedule {
   dinner?: string;
 }
 
+interface Channel {
+  id: string;
+  name: string;
+}
+
 export default function DashboardPage() {
   const { user } = useAuth();
   const [selectedServer, setSelectedServer] = useState("");
+  const [channels, setChannels] = useState<Channel[]>([]);
+  const [selectedChannel, setSelectedChannel] = useState("");
   const [roles, setRoles] = useState<Role[]>([]);
   const [selectedRole, setSelectedRole] = useState("");
   const [hasUpload, setHasUpload] = useState(false);
@@ -39,8 +46,8 @@ export default function DashboardPage() {
   
   const selectedGuild = useMemo(() => user?.guilds?.find(g => g.id === selectedServer), [user, selectedServer]);
 
-  // A server must be selected to enable the file upload
-  const isFileSelectorDisabled = !selectedServer;
+  // Server and channel must be selected to enable the file upload
+  const isFileSelectorDisabled = !selectedServer || !selectedChannel;
 
   // Helper functions to convert between Time objects and strings
   const parseTime = (timeStr: string | null | undefined): Time | null => {
@@ -122,6 +129,33 @@ export default function DashboardPage() {
     };
 
     fetchRoles();
+  }, [selectedServer]);
+
+  // Fetch channels when a server is selected
+  useEffect(() => {
+    const fetchChannels = async () => {
+      if (!selectedServer) {
+        setChannels([]);
+        setSelectedChannel("");
+        return;
+      }
+
+      try {
+        const response = await fetch(`http://localhost:5000/auth/discord/channels/${selectedServer}`);
+        if (response.ok) {
+          const data = await response.json();
+          setChannels(data.channels || []);
+        } else {
+          console.error('Failed to fetch channels');
+          setChannels([]);
+        }
+      } catch (error) {
+        console.error('Error fetching channels:', error);
+        setChannels([]);
+      }
+    };
+
+    fetchChannels();
   }, [selectedServer]);
 
   // Fetch saved meal schedule when server is selected and upload exists
@@ -253,12 +287,15 @@ export default function DashboardPage() {
     <div className="flex justify-center">
       <div className="w-6xl h-full">
         <h1 className="dark:text-white text-5xl font-bold pt-16">Menu Automation</h1>
+        <p className="text-gray-500 dark:text-gray-400 mt-2 max-w-2xl">Follow the steps below to automate your menu posts.</p>
         
-        <div className="mt-8">
-          <label className="dark:text-white block mb-3">Select a Server:</label>
+        <div className="mt-10">
+          <h2 className="text-2xl font-semibold dark:text-white">Step 1: Select a Server</h2>
+          <p className="text-gray-500 dark:text-gray-400 mb-4 max-w-2xl">Choose the Discord server and channel where you want to post the menu.</p>
+          <h3 className="text-sm font-medium dark:text-white">Server</h3>
           {user?.guilds && user.guilds.length > 0 ? (
             <Select value={selectedServer} onValueChange={setSelectedServer}>
-              <SelectTrigger className="w-[200px]">
+              <SelectTrigger className="w-[250px] h-[40px] mt-2">
                 <SelectValue placeholder="Select a server" />
               </SelectTrigger>
               <SelectContent>
@@ -272,17 +309,40 @@ export default function DashboardPage() {
           ) : (
             <p className="text-gray-400">No servers found</p>
           )}
+          {/* Channel Select */}
+          <div className={`mt-4 ${!selectedServer ? 'opacity-50 pointer-events-none' : ''}`}>
+            <h3 className="text-sm font-medium dark:text-white">Channel</h3>
+            <Select value={selectedChannel} onValueChange={setSelectedChannel} disabled={!selectedServer || (channels?.length ?? 0) === 0}>
+              <SelectTrigger className="w-[250px] h-[40px] mt-2">
+                <SelectValue placeholder={(channels?.length ?? 0) === 0 ? 'No channels available' : 'Select a channel'} />
+              </SelectTrigger>
+              <SelectContent>
+                {channels?.map((channel) => (
+                  <SelectItem key={channel.id} value={channel.id}>
+                    {channel.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
         
         {/* FileUpload component */}
+        <h2 className="text-2xl font-semibold dark:text-white mt-12">Step 2: Upload Menu (Excel)</h2>
+        <p className="text-gray-500 dark:text-gray-400 mb-4 max-w-2xl">Upload the Excel file containing your menu. This enables scheduling.</p>
         <FileUpload 
           isDisabled={isFileSelectorDisabled} 
           selectedServerId={selectedGuild?.id || ""}
           selectedServerName={selectedGuild?.name || ""}
+          selectedChannelId={selectedChannel || ""}
+          selectedChannelName={channels.find(c => c.id === selectedChannel)?.name || ""}
+          onUploadSuccess={() => setHasUpload(true)}
         />
 
         {/* Time Input component */}
-        <div className={`mt-8 ${isFileSelectorDisabled ? 'opacity-50 pointer-events-none' : ''}`}>
+        <h2 className="text-2xl font-semibold dark:text-white mt-12">Step 3: Set Meal Times</h2>
+        <p className={`text-gray-500 dark:text-gray-400 mb-4 max-w-2xl ${isFileSelectorDisabled ? 'opacity-50' : ''}`}>Pick the times to post breakfast, lunch, snacks, and dinner.</p>
+        <div className={`mt-6 ${isFileSelectorDisabled ? 'opacity-50 pointer-events-none' : ''}`}>
           <TimeField 
             className="space-y-1 group" 
             value={breakfast || null}
@@ -290,7 +350,7 @@ export default function DashboardPage() {
             isDisabled={isFileSelectorDisabled}
           >
             <Label className="dark:text-white block mb-3">Breakfast:</Label>
-            <DateInput className="w-[200px]" />
+            <DateInput className="w-[250px]" />
           </TimeField>
 
           <TimeField 
@@ -300,7 +360,7 @@ export default function DashboardPage() {
             isDisabled={isFileSelectorDisabled}
           >
             <Label className="dark:text-white block mb-3">Lunch:</Label>
-            <DateInput className="w-[200px]" />
+            <DateInput className="w-[250px]" />
           </TimeField>
 
           <TimeField 
@@ -310,7 +370,7 @@ export default function DashboardPage() {
             isDisabled={isFileSelectorDisabled}
           >
             <Label className="dark:text-white block mb-3">Snacks:</Label>
-            <DateInput className="w-[200px]" />
+            <DateInput className="w-[250px]" />
           </TimeField>
 
           <TimeField 
@@ -320,37 +380,36 @@ export default function DashboardPage() {
             isDisabled={isFileSelectorDisabled}
           >
             <Label className="dark:text-white block mb-3">Dinner:</Label>
-            <DateInput className="w-[200px]" />
+            <DateInput className="w-[250px]" />
           </TimeField>
         </div>
 
         {/* Role Selection */}
-        <div className={`mt-8 ${isFileSelectorDisabled ? 'opacity-50 pointer-events-none' : ''}`}>
-          <label className="dark:text-white block mb-3">Select Role to Ping:</label>
-          {roles && roles.length > 0 ? (
-            <Select value={selectedRole} onValueChange={setSelectedRole} disabled={isFileSelectorDisabled}>
-              <SelectTrigger className="w-[200px] h-[40px]">
-                <SelectValue placeholder="Select a role" />
-              </SelectTrigger>
-              <SelectContent>
-                {roles.map((role) => (
-                  <SelectItem key={role.id} value={role.id}>
-                    {role.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          ) : (
-            <p className="text-gray-400">No roles found. Please select a server first.</p>
-          )}
+        <h2 className="text-2xl font-semibold dark:text-white mt-12">Step 4: Choose Role to Ping</h2>
+        <p className={`text-gray-500 dark:text-gray-400 mb-4 max-w-2xl ${isFileSelectorDisabled ? 'opacity-50' : ''}`}>Select the role that should be mentioned when the menu is posted.</p>
+        <div className={`mt-6 ${isFileSelectorDisabled ? 'opacity-50 pointer-events-none' : ''}`}>
+          <Select value={selectedRole} onValueChange={setSelectedRole} disabled={isFileSelectorDisabled || (roles?.length ?? 0) === 0}>
+            <SelectTrigger className="w-[250px] h-[40px]">
+              <SelectValue placeholder={(roles?.length ?? 0) === 0 ? 'No roles available' : 'Select a role'} />
+            </SelectTrigger>
+            <SelectContent>
+              {roles?.map((role) => (
+                <SelectItem key={role.id} value={role.id}>
+                  {role.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Save Changes Button */}
-        <div className="mt-8">
+        <h2 className="text-2xl font-semibold dark:text-white mt-12">Step 5: Save</h2>
+        <p className="text-gray-500 dark:text-gray-400 mb-4 max-w-2xl">Review your selections and save to apply the schedule.</p>
+        <div className="mt-6">
           <Button 
             onClick={handleSaveChanges} 
             disabled={!canSaveChanges || isSaving}
-            className="w-[200px]"
+            className="w-[250px]"
           >
             {isSaving ? "Saving..." : "Save Changes"}
           </Button>

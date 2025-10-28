@@ -18,6 +18,8 @@ const UserSchema = new mongoose.Schema({
     {
       serverId: { type: String, required: true },
       serverName: { type: String, required: true },
+      channelId: { type: String },
+      channelName: { type: String },
       fileUrl: { type: String, required: true },
       uploadedAt: { type: Date, default: Date.now },
     },

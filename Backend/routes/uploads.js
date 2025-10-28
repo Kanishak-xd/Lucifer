@@ -39,7 +39,7 @@ router.get("/me", authMiddleware, async (req, res) => {
 router.post("/", authMiddleware, async (req, res) => {
   try {
     const { id: discordId, username, avatar } = req.user;
-    const { serverId, serverName, fileUrl } = req.body;
+    const { serverId, serverName, channelId, channelName, fileUrl } = req.body;
 
     if (!serverId || !serverName || !fileUrl) {
       return res.status(400).json({ message: "serverId, serverName, fileUrl required" });
@@ -55,7 +55,7 @@ router.post("/", authMiddleware, async (req, res) => {
       return res.status(400).json({ message: "Remove existing upload before uploading a new one" });
     }
 
-    user.uploads.push({ serverId, serverName, fileUrl });
+    user.uploads.push({ serverId, serverName, channelId: channelId || null, channelName: channelName || null, fileUrl });
     await user.save();
     return res.status(201).json({ uploads: user.uploads });
   } catch (err) {
