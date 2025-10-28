@@ -2,6 +2,7 @@ import "./App.css";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext.tsx";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import { Analytics } from "@vercel/analytics/react";
 
 import { SimpleHeader } from "./components/simple-header";
 import HomePage from "./pages/HomePage.tsx";
@@ -43,6 +44,7 @@ function App() {
           <Footer />
         </div>
       </Router>
+      <Analytics />
     </AuthProvider>
   );
 }
