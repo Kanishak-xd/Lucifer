@@ -191,9 +191,9 @@ export default function FileUpload({ isDisabled, selectedServerId, selectedServe
   const fileName = uploadedFile?.name;
 
   return (
-    <div className="mt-8">
+    <div className="mt-8 w-full">
       <div className={cn(
-        "w-full max-w-md space-y-6 rounded-xl border border-border bg-card p-6 shadow-sm transition-opacity",
+        "w-full max-w-md space-y-6 rounded-xl border border-border bg-card p-6 shadow-sm transition-opacity overflow-hidden",
         {
           "opacity-50 cursor-not-allowed pointer-events-none": isDisabled,
         }
@@ -267,19 +267,19 @@ export default function FileUpload({ isDisabled, selectedServerId, selectedServe
         )}
       </div>
       
-      <div className="mt-6 flex gap-3 items-center">
+      <div className="mt-6 flex flex-wrap gap-2 items-center w-full max-w-md">
         <Button 
           onClick={handleUpload} 
           disabled={isDisabled || !uploadedFile || isProcessing || !!existingUpload}
-          className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg flex items-center gap-2"
+          className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg flex items-center gap-2 w-full sm:w-auto"
         >
           <CloudUpload className="h-4 w-4" />
           {isProcessing ? "Uploading..." : "Upload File"}
         </Button>
         {existingUpload && (
-          <div className="text-sm text-muted-foreground flex items-center gap-2">
-            <a href={existingUpload.fileUrl} target="_blank" rel="noreferrer" className="px-6 py-[9.5px] mr-1 font-medium bg-blue-300 text-white dark:bg-neutral-200 dark:text-black rounded-md">View current upload</a>
-            <Button size="sm" className='dark:text-black text-white' variant="destructive" onClick={handleRemoveExisting}>
+          <div className="text-sm text-muted-foreground flex flex-wrap items-center gap-2 flex-1 w-full sm:w-auto">
+            <a href={existingUpload.fileUrl} target="_blank" rel="noreferrer" className="px-6 py-2 font-medium bg-blue-300 text-white dark:bg-neutral-200 dark:text-black rounded-md w-full sm:w-auto text-center">View Upload</a>
+            <Button size="sm" className='dark:text-black flex-1 text-white w-full sm:w-auto' variant="destructive" onClick={handleRemoveExisting}>
               <Trash2 className="h-4 w-4 mr-1" /> Remove
             </Button>
           </div>

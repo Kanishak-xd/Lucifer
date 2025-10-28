@@ -284,13 +284,13 @@ export default function DashboardPage() {
   };
   
   return (
-    <div className="flex justify-center">
-      <div className="w-6xl h-full">
-        <h1 className="dark:text-white text-5xl font-bold pt-16">Menu Automation</h1>
+    <div className="flex justify-center pb-20 px-4 sm:px-10 w-full">
+      <div className="w-full max-w-6xl h-full">
+        <h1 className="dark:text-white text-4xl sm:text-5xl md:text-5xl xl:text-6xl font-bold pt-16">Menu Automation</h1>
         <p className="text-gray-500 dark:text-gray-400 mt-2 max-w-2xl">Follow the steps below to automate your menu posts.</p>
         
-        <div className="mt-10">
-          <h2 className="text-2xl font-semibold dark:text-white">Step 1: Select a Server</h2>
+        <div className="mt-10 w-full overflow-x-hidden">
+          <h2 className="text-2xl sm:text-3xl font-semibold dark:text-white">Step 1: Select a Server</h2>
           <p className="text-gray-500 dark:text-gray-400 mb-4 max-w-2xl">Choose the Discord server and channel where you want to post the menu.</p>
           <h3 className="text-sm font-medium dark:text-white">Server</h3>
           {user?.guilds && user.guilds.length > 0 ? (
@@ -328,8 +328,8 @@ export default function DashboardPage() {
         </div>
         
         {/* FileUpload component */}
-        <h2 className="text-2xl font-semibold dark:text-white mt-12">Step 2: Upload Menu (Excel)</h2>
-        <p className="text-gray-500 dark:text-gray-400 mb-4 max-w-2xl">Upload the Excel file containing your menu. This enables scheduling.</p>
+        <h2 className="text-2xl sm:text-3xl font-semibold dark:text-white mt-12">Step 2: Upload Menu</h2>
+        <p className="text-gray-500 dark:text-gray-400 mb-4 max-w-2xl">Upload the Excel file containing your menu.</p>
         <FileUpload 
           isDisabled={isFileSelectorDisabled} 
           selectedServerId={selectedGuild?.id || ""}
@@ -340,9 +340,9 @@ export default function DashboardPage() {
         />
 
         {/* Time Input component */}
-        <h2 className="text-2xl font-semibold dark:text-white mt-12">Step 3: Set Meal Times</h2>
+        <h2 className="text-2xl sm:text-3xl font-semibold dark:text-white mt-12">Step 3: Set Meal Times</h2>
         <p className={`text-gray-500 dark:text-gray-400 mb-4 max-w-2xl ${isFileSelectorDisabled ? 'opacity-50' : ''}`}>Pick the times to post breakfast, lunch, snacks, and dinner.</p>
-        <div className={`mt-6 ${isFileSelectorDisabled ? 'opacity-50 pointer-events-none' : ''}`}>
+        <div className={`mt-6 w-full overflow-x-hidden ${isFileSelectorDisabled ? 'opacity-50 pointer-events-none' : ''}`}>
           <TimeField 
             className="space-y-1 group" 
             value={breakfast || null}
@@ -385,9 +385,9 @@ export default function DashboardPage() {
         </div>
 
         {/* Role Selection */}
-        <h2 className="text-2xl font-semibold dark:text-white mt-12">Step 4: Choose Role to Ping</h2>
+        <h2 className="text-2xl sm:text-3xl font-semibold dark:text-white mt-12">Step 4: Choose Role to Ping</h2>
         <p className={`text-gray-500 dark:text-gray-400 mb-4 max-w-2xl ${isFileSelectorDisabled ? 'opacity-50' : ''}`}>Select the role that should be mentioned when the menu is posted.</p>
-        <div className={`mt-6 ${isFileSelectorDisabled ? 'opacity-50 pointer-events-none' : ''}`}>
+        <div className={`mt-6 w-full overflow-x-hidden ${isFileSelectorDisabled ? 'opacity-50 pointer-events-none' : ''}`}>
           <Select value={selectedRole} onValueChange={setSelectedRole} disabled={isFileSelectorDisabled || (roles?.length ?? 0) === 0}>
             <SelectTrigger className="w-[250px] h-[40px]">
               <SelectValue placeholder={(roles?.length ?? 0) === 0 ? 'No roles available' : 'Select a role'} />
@@ -403,9 +403,9 @@ export default function DashboardPage() {
         </div>
 
         {/* Save Changes Button */}
-        <h2 className="text-2xl font-semibold dark:text-white mt-12">Step 5: Save</h2>
+        <h2 className="text-2xl sm:text-3xl font-semibold dark:text-white mt-12">Step 5: Save</h2>
         <p className="text-gray-500 dark:text-gray-400 mb-4 max-w-2xl">Review your selections and save to apply the schedule.</p>
-        <div className="mt-6">
+        <div className="mt-6 w-full overflow-x-hidden">
           <Button 
             onClick={handleSaveChanges} 
             disabled={!canSaveChanges || isSaving}
