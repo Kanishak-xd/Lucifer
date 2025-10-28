@@ -147,9 +147,11 @@ export default function DashboardPage() {
         const response = await fetch(`${API_BASE}/auth/discord/channels/${selectedServer}`);
         if (response.ok) {
           const data = await response.json();
+          console.log('Channels data:', data);
           setChannels(data.channels || []);
         } else {
-          console.error('Failed to fetch channels');
+          const errorText = await response.text();
+          console.error('Failed to fetch channels:', response.status, errorText);
           setChannels([]);
         }
       } catch (error) {

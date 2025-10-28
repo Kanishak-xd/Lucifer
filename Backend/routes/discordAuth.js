@@ -145,11 +145,14 @@ router.get("/channels/:guildId", async (req, res) => {
 
     const channels = channelsResponse.data || [];
 
+    console.log(`Fetched ${channels.length} total channels for guild ${guildId}`);
+
     // Discord channel type 0 = GUILD_TEXT (standard text channels)
     const textChannels = channels
       .filter((ch) => ch?.type === 0)
       .map((ch) => ({ id: ch.id, name: ch.name }));
 
+    console.log(`Returning ${textChannels.length} text channels`);
     res.json({ channels: textChannels });
   } catch (err) {
     console.error("Error fetching channels:", err.response?.data || err.message);
