@@ -284,7 +284,7 @@ export default function DashboardPage() {
   };
   
   return (
-    <div className="flex justify-center pb-20 px-4 sm:px-10 w-full">
+    <div id="dashboard" className="flex justify-center pb-20 px-4 sm:px-10 w-full">
       <div className="w-full max-w-6xl h-full">
         <h1 className="dark:text-white text-4xl sm:text-5xl md:text-5xl xl:text-6xl font-bold pt-16">Menu Automation</h1>
         <p className="text-gray-500 dark:text-gray-400 mt-2 max-w-2xl">Follow the steps below to automate your menu posts.</p>

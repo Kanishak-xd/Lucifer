@@ -1,7 +1,7 @@
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useEffect } from 'react';
-
 export default function Footer() {
+const navigate = useNavigate();
 useEffect(() => {
         console.time('footer-mounted');
     }, []);
@@ -30,10 +30,26 @@ useEffect(() => {
                                 <Link to="/" className="hover:text-white transition-colors duration-200">Home</Link>
                             </li>
                             <li>
-                                <Link to="#" className="hover:text-white transition-colors duration-200">Features</Link>
+                                <a onClick={() => {navigate("/home");
+                                    setTimeout(() => {
+                                        const element = document.getElementById("features");
+                                        element?.scrollIntoView({ behavior: "smooth" });
+                                    }, 100);
+                                }} className="hover:text-white hover:cursor-pointer transition-colors duration-200"
+                                >
+                                    Features
+                                </a>
                             </li>
                             <li>
-                                <Link to="#" className="hover:text-white transition-colors duration-200">Dashboard</Link>
+                            <a onClick={() => {navigate("/dashboard");
+                                    setTimeout(() => {
+                                        const element = document.getElementById("dashboard");
+                                        element?.scrollIntoView({ behavior: "smooth" });
+                                    }, 100);
+                                }} className="hover:text-white hover:cursor-pointer transition-colors duration-200"
+                                >
+                                    Dashboard
+                                </a>
                             </li>
                         </ul>
                     </div>
@@ -43,13 +59,13 @@ useEffect(() => {
                         <h3 className="tracking-wide uppercase text-neutral-400 font-semibold text-[1rem]">Support</h3>
                         <ul className="space-y-2 text-sm md:text-base">
                             <li>
-                                <a href="#" className="hover:text-white transition-colors duration-200">Privacy Policy</a>
+                                <a href="https://docs.google.com/document/d/1ajQjoQx5WGZdnM9w2OG4MrSLGLhhrtFM4kqozu9v4QA/edit?tab=t.0#heading=h.tn579u38fg74" className="hover:text-white transition-colors duration-200">Privacy Policy</a>
                             </li>
                             <li>
-                                <a href="#" className="hover:text-white transition-colors duration-200">Terms of Service</a>
+                                <a href="https://docs.google.com/document/d/1ajQjoQx5WGZdnM9w2OG4MrSLGLhhrtFM4kqozu9v4QA/edit?tab=t.0#heading=h.b5uc4dogriwx" className="hover:text-white transition-colors duration-200">Terms of Service</a>
                             </li>
                             <li>
-                                <a href="#" className="hover:text-white transition-colors duration-200">Help / FAQ</a>
+                                <a href="https://docs.google.com/document/d/1ajQjoQx5WGZdnM9w2OG4MrSLGLhhrtFM4kqozu9v4QA/edit?tab=t.0#heading=h.3yp6j1fpzgpo" className="hover:text-white transition-colors duration-200">Help / FAQ</a>
                             </li>
                         </ul>
                     </div>
@@ -59,10 +75,10 @@ useEffect(() => {
                         <h3 className="uppercase text-neutral-400 font-semibold text-[1rem]">About</h3>
                         <ul className="space-y-2 text-sm md:text-base">
                             <li>
-                                <Link to="#" className="hover:text-white transition-colors duration-200">Contact</Link>
+                                <a href="https://mail.google.com/mail/u/0/?fs=1&to=kanishak.sharma22@st.niituniversity.in&su&body&tf=cm" className="hover:text-white transition-colors duration-200">Contact</a>
                             </li>
                             <li>
-                                <Link to="#" className="hover:text-white transition-colors duration-200">About Us</Link>
+                                <Link to="/about" className="hover:text-white transition-colors duration-200">About Us</Link>
                             </li>
                         </ul>
 
