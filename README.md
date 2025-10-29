@@ -72,3 +72,7 @@ For issues or questions, please open an issue on GitHub.
 - **Figma Wireframe**:
   
   ![Figma Wireframe](https://res.cloudinary.com/dykzzd9sy/image/upload/v1761726431/fc534ab0-dae9-4cc7-8f8a-5b26fc9eaf5c.png)
+
+- **Jira Timeline**:
+
+   ![Jira Timeline](https://res.cloudinary.com/dykzzd9sy/image/upload/v1761732166/53b677e9-ccfd-4680-8261-4408f0f091a8.png)
