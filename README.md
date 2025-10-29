@@ -1,6 +1,6 @@
-# Menu Automation - Discord Bot
+# Lucifer Website
 
-Automate daily meal menu posts to Discord servers.
+Meals, classes, and reminders made easy, Lucifer keeps campus life simple.
 
 ## Architecture
 
@@ -58,3 +58,17 @@ Automate daily meal menu posts to Discord servers.
 
 For issues or questions, please open an issue on GitHub.
 
+
+## Assets and References
+
+- **Cloudinary CDN**:
+  
+  ![Cloudinary CDN Folder](https://res.cloudinary.com/dykzzd9sy/image/upload/v1761726590/c524bad1-eb53-4e23-b06c-ae92e7ab2834.png)
+
+- **MongoDB Users Collection**:
+  
+  ![MongoDB Users Collection](https://res.cloudinary.com/dykzzd9sy/image/upload/v1761726481/b33949a1-4309-4ca3-92b7-ee301708c07c.png)
+
+- **Figma Wireframe**:
+  
+  ![Figma Wireframe](https://res.cloudinary.com/dykzzd9sy/image/upload/v1761726431/fc534ab0-dae9-4cc7-8f8a-5b26fc9eaf5c.png)
